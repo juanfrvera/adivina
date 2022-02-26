@@ -1,10 +1,10 @@
 import { Button, Text, View } from 'react-native';
 
-function clickPlay() {
-    alert("click play")
-}
+export default function Menu(props) {
+    const clickPlay = () => {
+        props.navigation.navigate({ name: "play" });
+    }
 
-export default function Menu() {
     return (
         <View>
             <Text>Taboo</Text>
