@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 
 function usePrevious(value) {
     const ref = useRef();
@@ -42,5 +42,12 @@ export default function Timer(props) {
     // Clear the timer interval when the component unmounts
     useEffect(() => () => clearInterval(timer), []);
 
-    return (<Text>{time}</Text>)
+    return (<Text style={styles.timer}>{time}</Text>)
 }
+
+const styles = StyleSheet.create({
+    timer: {
+        textAlign: "center",
+        fontSize: 32
+    }
+})

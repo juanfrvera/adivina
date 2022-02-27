@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
+
 import OutOfTime from "./out-of-time";
 import Timer from "./timer";
 import WordGuess from "./word-guess";
 
-const STARTING_TIME = 30;
+const STARTING_TIME = 60;
 
 export default function Play(props) {
     const clickBack = () => {
@@ -64,15 +65,24 @@ export default function Play(props) {
     }
 
     return (
-        <View>
+        <View style={styles.container}>
             <Button onPress={clickBack} title="Volver"></Button>
             <Timer time={time} setTime={setTime} />
             {currentSceen}
-            <Text>Rechazadas: {rejectedCount}</Text>
-            <Text>Aprobadas: {approvedCount}</Text>
+            <View>
+                <Text>Rechazadas: {rejectedCount}</Text>
+                <Text>Aprobadas: {approvedCount}</Text>
+            </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "space-between"
+    }
+})
 
 const wordList = [
     {
@@ -91,6 +101,24 @@ const wordList = [
             "Beber",
             "Recipiente",
             "Bebida"
+        ]
+    },
+    {
+        value: "Kiosco",
+        prohibited: [
+            "Negocio",
+            "Comprar",
+            "Vender",
+            "Tienda"
+        ]
+    },
+    {
+        value: "Pelota",
+        prohibited: [
+            "Patear",
+            "Esfera",
+            "Redonda",
+            "Inflar"
         ]
     },
     {

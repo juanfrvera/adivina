@@ -1,4 +1,4 @@
-import { Button, ScrollView, Text, View } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function WordGuess(props) {
     const clickReject = () => {
@@ -15,14 +15,24 @@ export default function WordGuess(props) {
     });
 
     return (
-        <View>
-            <View>
+        <View style={styles.container}>
+            <View style={styles.card}>
                 <Text>{word.value}</Text>
                 <ScrollView>{prohibitedListModel}</ScrollView>
             </View>
-            <Button onPress={clickReject} title="Mal"></Button>
-            <Button onPress={clickApprove} title="Bien"></Button>
+            <View style={styles.actions}>
+                <Button onPress={clickReject} title="Mal"></Button>
+                <Button onPress={clickApprove} title="Bien"></Button>
+            </View>
         </View>
     )
-
 }
+
+const styles = StyleSheet.create({
+    container: {
+    },
+    card: {
+    },
+    actions: {
+    }
+})
