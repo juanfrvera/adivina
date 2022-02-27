@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button, Text, View } from "react-native";
+import OutOfTime from "./out-of-time";
 import Timer from "./timer";
 import WordGuess from "./word-guess";
+
+const STARTING_TIME = 30;
 
 export default function Play(props) {
     const clickBack = () => {
@@ -10,12 +13,10 @@ export default function Play(props) {
 
     const onReject = () => {
         setRejectedCount(r => r + 1);
-
         pickFreshWordOrRestart();
     }
     const onApprove = () => {
         setApprovedCount(a => a + 1);
-
         pickFreshWordOrRestart();
     }
 
@@ -39,12 +40,13 @@ export default function Play(props) {
         }
     }
 
-    const timerEnded = () => {
-        alert("out of time");
+    const onNext = () => {
+        setTime(STARTING_TIME);
     }
 
     const [approvedCount, setApprovedCount] = useState(0);
     const [rejectedCount, setRejectedCount] = useState(0);
+    const [time, setTime] = useState(STARTING_TIME);
     const [usedWords, setUsedWords] = useState([]);
     const [word, setWord] = useState(getRandomNotUsedWord);
 
@@ -52,11 +54,20 @@ export default function Play(props) {
         setUsedWords(uw => [...uw, word]);
     }, [word]);
 
+    let currentSceen;
+
+    if (time > 0) {
+        currentSceen = <WordGuess word={word} onReject={onReject} onApprove={onApprove} />
+    }
+    else {
+        currentSceen = <OutOfTime onNext={onNext} />
+    }
+
     return (
         <View>
             <Button onPress={clickBack} title="Volver"></Button>
-            <Timer startingValue="5" onEnd={timerEnded} />
-            <WordGuess word={word} onReject={onReject} onApprove={onApprove} />
+            <Timer time={time} setTime={setTime} />
+            {currentSceen}
             <Text>Rechazadas: {rejectedCount}</Text>
             <Text>Aprobadas: {approvedCount}</Text>
         </View>

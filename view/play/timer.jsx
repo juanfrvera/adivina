@@ -1,22 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text } from "react-native";
 
+function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
+
 export default function Timer(props) {
+    const time = props.time;
+    const setTime = props.setTime;
+
     const createTimer = () => {
         return setInterval(() => {
             setTime(t => t - 1);
         }, 1000);
     }
 
-    const [time, setTime] = useState(() => props.startingValue);
     const [timer, setTimer] = useState(createTimer);
+    const prevTime = usePrevious(time);
 
     useEffect(() => {
-        if (time == 0) {
-            props.onEnd();
-            clearInterval(timer);
+        if (prevTime != undefined) {
+            if (prevTime > 0) {
+                if (time == 0) {
+                    // Time passed from 1 to 0, stop the timer
+                    clearInterval(timer);
+                }
+            }
+            else {
+                if (time > 0) {
+                    // Time passed from 0 to > 0, start the timer
+                    setTimer(createTimer);
+                }
+            }
         }
     }, [time]);
+
     // Clear the timer interval when the component unmounts
     useEffect(() => () => clearInterval(timer), []);
 
