@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Text } from "react-native";
 
 export default function Timer(props) {
-    const [time, setTime] = useState(() => 10);
+    const [time, setTime] = useState(() => props.startingValue);
 
     useEffect(() => {
         const timer = setInterval(() => {
