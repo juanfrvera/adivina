@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
-import { Button, ScrollView, Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 import Timer from "./timer";
+import WordGuess from "./word-guess";
 
 export default function Play(props) {
     const clickBack = () => {
         props.navigation.navigate({ name: "menu" });
     }
 
-    const clickReject = () => {
+    const onReject = () => {
         setRejectedCount(r => r + 1);
 
         pickFreshWordOrRestart();
     }
-    const clickApprove = () => {
+    const onApprove = () => {
         setApprovedCount(a => a + 1);
 
         pickFreshWordOrRestart();
@@ -51,22 +52,11 @@ export default function Play(props) {
         setUsedWords(uw => [...uw, word]);
     }, [word]);
 
-    const prohibitedListModel = word.prohibited.map((p, index) => {
-        return <Text key={index}>{p}</Text>
-    });
-
     return (
         <View>
             <Button onPress={clickBack} title="Volver"></Button>
-            <Timer
-                startingValue="5"
-                onEnd={timerEnded}></Timer>
-            <View>
-                <Text>{word.value}</Text>
-                <ScrollView>{prohibitedListModel}</ScrollView>
-            </View>
-            <Button onPress={clickReject} title="Mal"></Button>
-            <Button onPress={clickApprove} title="Bien"></Button>
+            <Timer startingValue="5" onEnd={timerEnded} />
+            <WordGuess word={word} onReject={onReject} onApprove={onApprove} />
             <Text>Rechazadas: {rejectedCount}</Text>
             <Text>Aprobadas: {approvedCount}</Text>
         </View>
