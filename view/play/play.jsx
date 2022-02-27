@@ -8,7 +8,7 @@ export default function Play(props) {
     }
 
     const clickReject = () => {
-        setRejectedCount(a => a + 1);
+        setRejectedCount(r => r + 1);
 
         pickFreshWordOrRestart();
     }
@@ -17,6 +17,7 @@ export default function Play(props) {
 
         pickFreshWordOrRestart();
     }
+
     const getRandomNotUsedWord = () => {
         const unusedWords = wordList.filter(w => !usedWords.find(uw => uw.value == w.value));
 
@@ -37,6 +38,10 @@ export default function Play(props) {
         }
     }
 
+    const timerEnded = () => {
+        alert("out of time");
+    }
+
     const [approvedCount, setApprovedCount] = useState(0);
     const [rejectedCount, setRejectedCount] = useState(0);
     const [usedWords, setUsedWords] = useState([]);
@@ -53,7 +58,9 @@ export default function Play(props) {
     return (
         <View>
             <Button onPress={clickBack} title="Volver"></Button>
-            <Timer startingValue="20"></Timer>
+            <Timer
+                startingValue="5"
+                onEnd={timerEnded}></Timer>
             <View>
                 <Text>{word.value}</Text>
                 <ScrollView>{prohibitedListModel}</ScrollView>
