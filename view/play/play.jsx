@@ -5,7 +5,7 @@ import OutOfTime from "./out-of-time";
 import Timer from "./timer";
 import WordGuess from "./word-guess";
 
-const STARTING_TIME = 60;
+const STARTING_TIME = 5;
 
 export default function Play(props) {
     const clickBack = () => {
@@ -14,11 +14,11 @@ export default function Play(props) {
 
     const onReject = () => {
         setRejectedCount(r => r + 1);
-        pickFreshWordOrRestart();
+        pickFreshWordOrCleanUsedList();
     }
     const onApprove = () => {
         setApprovedCount(a => a + 1);
-        pickFreshWordOrRestart();
+        pickFreshWordOrCleanUsedList();
     }
 
     const getRandomNotUsedWord = () => {
@@ -29,7 +29,7 @@ export default function Play(props) {
     const getRandomWord = (wordList) => {
         return wordList[Math.floor(Math.random() * wordList.length)];
     }
-    const pickFreshWordOrRestart = () => {
+    const pickFreshWordOrCleanUsedList = () => {
         const freshWord = getRandomNotUsedWord();
 
         if (freshWord) {
@@ -42,6 +42,7 @@ export default function Play(props) {
     }
 
     const onNext = () => {
+        pickFreshWordOrCleanUsedList();
         setTime(STARTING_TIME);
     }
 
@@ -51,9 +52,7 @@ export default function Play(props) {
     const [usedWords, setUsedWords] = useState([]);
     const [word, setWord] = useState(getRandomNotUsedWord);
 
-    useEffect(() => {
-        setUsedWords(uw => [...uw, word]);
-    }, [word]);
+    useEffect(() => setUsedWords(uw => [...uw, word]), [word]);
 
     let currentSceen;
 
