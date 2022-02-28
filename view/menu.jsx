@@ -7,7 +7,7 @@ export default function Menu(props) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.titleText}>Taboo</Text>
+            <Text style={styles.titleText}>Adivina la palabra</Text>
             <Button onPress={clickPlay} title="Jugar" />
             <Button title="Salir" style={styles.actionButton} />
         </View>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import OutOfTime from "./out-of-time";
 import Timer from "./timer";
 import WordGuess from "./word-guess";
@@ -14,64 +16,100 @@ export default function Play(props) {
 
     const onReject = () => {
         setRejectedCount(r => r + 1);
-        pickFreshWordOrCleanUsedList();
+        addWordToUsedWords(word);
     }
     const onApprove = () => {
         setApprovedCount(a => a + 1);
-        pickFreshWordOrCleanUsedList();
+        addWordToUsedWords(word);
     }
 
-    const getRandomNotUsedWord = () => {
-        const unusedWords = wordList.filter(w => !usedWords.find(uw => uw.value == w.value));
-
-        return getRandomWord(unusedWords);
-    }
     const getRandomWord = (wordList) => {
         return wordList[Math.floor(Math.random() * wordList.length)];
     }
-    const pickFreshWordOrCleanUsedList = () => {
-        const freshWord = getRandomNotUsedWord();
-
-        if (freshWord) {
-            setWord(freshWord);
-        }
-        else {
-            setUsedWords([]);
-            setWord(getRandomWord(wordList));
-        }
-    }
 
     const onNext = () => {
-        pickFreshWordOrCleanUsedList();
+        addWordToUsedWords(word);
         setTime(STARTING_TIME);
+    }
+
+    const addWordToUsedWords = (addedWord) => {
+        setUsedWords(uw => [...uw, addedWord]);
+    }
+
+    const getStorageUsedWords = async () => {
+        const storageString = await AsyncStorage.getItem(storageKeys.usedWordList);
+
+        if (storageString) {
+            return JSON.parse(storageString);
+        }
+        else {
+            return [];
+        }
     }
 
     const [approvedCount, setApprovedCount] = useState(0);
     const [rejectedCount, setRejectedCount] = useState(0);
     const [time, setTime] = useState(STARTING_TIME);
-    const [usedWords, setUsedWords] = useState([]);
-    const [word, setWord] = useState(getRandomNotUsedWord);
 
-    useEffect(() => setUsedWords(uw => [...uw, word]), [word]);
+    // It is started as null to be able to differentiate from an empty array
+    const [usedWords, setUsedWords] = useState(null);
+    const [word, setWord] = useState(null);
 
-    let currentSceen;
+    // OnMount effect
+    useEffect(async () => {
+        const storageUsedWords = await getStorageUsedWords();
+
+        if (storageUsedWords.length) {
+            console.log(storageUsedWords);
+        }
+        else {
+            console.log("No se encontraron palabras usadas en el storage");
+        }
+
+        setUsedWords(storageUsedWords);
+    }, []);
+
+    // After a word is added to usedWords, pick a new one and save the old in storage
+    useEffect(() => {
+        if (usedWords) {
+            AsyncStorage.setItem(storageKeys.usedWordList, JSON.stringify(usedWords));
+
+            const unusedWords = wordList.filter(w => !usedWords.find(uw => uw.value == w.value));
+            const newWord = getRandomWord(unusedWords);
+
+            if (newWord) {
+                setWord(newWord);
+            }
+            else {
+                // Reset used words
+                setUsedWords([]);
+            }
+        }
+    }, [usedWords])
+
+    let currentScreen;
 
     if (time > 0) {
-        currentSceen = (
-            <View>
-                <Timer time={time} setTime={setTime} />
-                <WordGuess word={word} onReject={onReject} onApprove={onApprove} />
-            </View>
-        );
+        if (word) {
+            currentScreen = (
+                <View>
+                    <Timer time={time} setTime={setTime} />
+                    <WordGuess word={word} onReject={onReject} onApprove={onApprove} />
+                </View>
+            );
+        }
+        else {
+            currentScreen = <Text style={styles.loadingWordText}>Buscando palabra...</Text>
+        }
     }
     else {
-        currentSceen = <OutOfTime onNext={onNext} />
+        currentScreen = <OutOfTime onNext={onNext} />
     }
 
     return (
         <View style={styles.container}>
             <Button onPress={clickBack} title="Volver"></Button>
-            {currentSceen}
+            {currentScreen}
             <View>
                 <Text>Rechazadas: {rejectedCount}</Text>
                 <Text>Aprobadas: {approvedCount}</Text>
@@ -85,8 +123,16 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "space-between",
         padding: 10
+    },
+    loadingWordText: {
+        fontSize: 32,
+        textAlign: "center"
     }
 })
+
+const storageKeys = {
+    usedWordList: "USED_WORD_LIST"
+}
 
 const wordList = [
     {
