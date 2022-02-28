@@ -33,7 +33,7 @@ export default function Play(props) {
     }
 
     const addWordToUsedWords = (addedWord) => {
-        setUsedWords(uw => [...uw, addedWord]);
+        setUsedWords(uw => [...uw, addedWord.value]);
     }
 
     const getStorageUsedWords = async () => {
@@ -74,7 +74,7 @@ export default function Play(props) {
         if (usedWords) {
             AsyncStorage.setItem(storageKeys.usedWordList, JSON.stringify(usedWords));
 
-            const unusedWords = wordList.filter(w => !usedWords.find(uw => uw.value == w.value));
+            const unusedWords = wordList.filter(w => !usedWords.find(uw => uw == w.value));
             const newWord = getRandomWord(unusedWords);
 
             if (newWord) {
