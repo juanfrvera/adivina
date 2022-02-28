@@ -17,7 +17,8 @@ export default function Menu(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "space-around"
+        justifyContent: "space-around",
+        padding: 10
     },
     titleText: {
         textAlign: "center",

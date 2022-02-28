@@ -34,7 +34,6 @@ export default function WordGuess(props) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
     },
     card: {
         justifyContent: "space-between",

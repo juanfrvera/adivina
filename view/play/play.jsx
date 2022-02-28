@@ -7,7 +7,7 @@ import OutOfTime from "./out-of-time";
 import Timer from "./timer";
 import WordGuess from "./word-guess";
 
-const STARTING_TIME = 5;
+const STARTING_TIME = 60;
 
 export default function Play(props) {
     const clickBack = () => {
