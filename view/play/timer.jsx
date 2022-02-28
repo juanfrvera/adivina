@@ -47,6 +47,7 @@ export default function Timer(props) {
 
 const styles = StyleSheet.create({
     timer: {
+        marginTop: 30,
         textAlign: "center",
         fontSize: 32
     }
