@@ -77,7 +77,7 @@ export default function Play(props) {
             const unusedWords = wordList.filter(w => !usedWords.find(uw => uw == w.value));
             const newWord = getRandomWord(unusedWords);
 
-            if (newWord) {
+            if (newWord && (!word || newWord.value != word.value)) {
                 setWord(newWord);
             }
             else {
