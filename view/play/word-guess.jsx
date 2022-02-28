@@ -21,8 +21,12 @@ export default function WordGuess(props) {
                 <ScrollView>{prohibitedListModel}</ScrollView>
             </View>
             <View style={styles.actions}>
-                <Button onPress={clickReject} title="Mal" style={styles.action} color="#a22" />
-                <Button onPress={clickApprove} title="Bien" style={styles.action} color="#2a2" />
+                <View style={styles.action}>
+                    <Button onPress={clickReject} title="Mal" color="#a22" />
+                </View>
+                <View style={styles.action}>
+                    <Button onPress={clickApprove} title="Bien" color="#2a2" />
+                </View>
             </View>
         </View>
     )
@@ -49,10 +53,8 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     actions: {
-        justifyContent: "space-around",
-        flex: 0.5,
     },
     action: {
-        padding: 20
+        margin: 15
     }
 })

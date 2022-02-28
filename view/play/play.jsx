@@ -57,7 +57,12 @@ export default function Play(props) {
     let currentSceen;
 
     if (time > 0) {
-        currentSceen = <WordGuess word={word} onReject={onReject} onApprove={onApprove} />
+        currentSceen = (
+            <View>
+                <Timer time={time} setTime={setTime} />
+                <WordGuess word={word} onReject={onReject} onApprove={onApprove} />
+            </View>
+        );
     }
     else {
         currentSceen = <OutOfTime onNext={onNext} />
@@ -66,7 +71,6 @@ export default function Play(props) {
     return (
         <View style={styles.container}>
             <Button onPress={clickBack} title="Volver"></Button>
-            <Timer time={time} setTime={setTime} />
             {currentSceen}
             <View>
                 <Text>Rechazadas: {rejectedCount}</Text>
