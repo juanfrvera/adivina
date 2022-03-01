@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     },
     prohibitedWord: {
         fontSize: 20,
-        color: "#faa",
+        color: "#c00",
         textAlign: "center",
         marginBottom: 10
     },
